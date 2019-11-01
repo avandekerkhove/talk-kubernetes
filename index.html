@@ -1,0 +1,394 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Introduction to Kubernetes</title>
+
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/white.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/monokai.css">
+
+		<link rel="stylesheet" href="css/alex.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+			
+				<section data-background-image="images/intro5.png" data-background-size="1300px"></section>
+			
+				<section>
+					<h2>On fait les présentations ?</h2>
+					<ul>
+						<li class="fragment" data-fragment-index="1">κυβερνήτης &rarr; timonier</li>
+						<li class="fragment" data-fragment-index="1">K8s</li>
+						<li class="fragment" data-fragment-index="1">Kube</li>
+						<li class="fragment" data-fragment-index="2">Ecrit en <strong>Go</strong></li>
+						<li class="fragment" data-fragment-index="2">Licence Apache 2.0</li>
+					</ul>
+				</section>
+				
+				<section>
+					<h2>Conteneurs ?</h2>
+					<figure>
+						<img data-src="images/containers.png">
+						<figcaption style="font-style: italic; font-size: large;">https://www.docker.com/blog/containers-replacing-virtual-machines/</figcaption>
+					</figure>
+				</section>
+				
+				<section data-transition="slide" data-background="#76cce2" data-background-transition="zoom">
+					<section><h2>Ai-je besoin d'un Orchestrateur ?</h2></section>
+					<section data-background="#fff">
+						<h2>1 conteneur</h2>
+						<img data-src="images/kube1.png" />
+					</section>
+					<section data-background="#fff">
+						<h2>Plusieurs conteneurs</h2>
+						<img data-src="images/kube2.png" />
+					</section>
+					<section data-background="#fff">
+						<h2>Cluster de serveurs et distribution des resources</h2>
+						<img data-src="images/kube3.png" />
+					</section>
+					<section data-background="#fff">
+						<h2>Mise à l'échelle</h2>
+						<img data-src="images/kube4.png" />
+					</section>
+					<section data-background="#fff">
+						<h2>'self healing'</h2>
+						<img data-src="images/kube5.png" />
+					</section>
+					<section data-background="#fff">
+						<h2>'Rolling deployment'</h2>
+						<img data-src="images/kube6.png" />
+					</section>
+					<section data-background="#fff">
+						<h2>Load balancer</h2>
+						<img data-src="images/kube7.png" />
+					</section>
+					<section data-background="#fff">
+						<h2>Kubernetes en particulier</h2>
+						<ul>
+							<li class="fragment">Abstraction de tous ces concepts</li>
+							<li class="fragment">Extensibilité</li>
+							<li class="fragment">Adoption massive</li>
+						</ul>
+						<p class="fragment" style="font-size: larger;"><strong>Une</strong> API pour les gouverner <strong>tous</strong></p>
+					</section>
+					<section data-background="#fff">
+						<h2>Et pour le développeur ?</h2>
+						<ul>
+							<li>Culture DevOps</li>
+							<li><em>You build it, you run it</em></li>
+						</ul>
+						<p>&rarr; Kubernetes peut devenir un prérequis pour tout développeur (cf. Docker...)</p>
+					</section>
+				</section>
+				
+				<section>
+					<section data-background-image="images/timeline.jpeg"><h2 style="color: white;">Timeline</h2></section>
+					<section data-background-image="images/google.png" data-background-size="300px">
+						<h2>Genèse : Google</h2>
+						<ul>
+							<li>2003 : Borg</li>
+							<li>2013 : Omega</li>
+							<li>2014 : Kubernetes, héritier OSS de Borg</li>
+							<li>07/2015
+								<ul>
+									<li>Kubernetes 1.0</li>
+									<li>Naissance de la CNCF (Google + The Linux Foundation)</li>
+								</ul>
+							</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Adoption</h2>
+						<ul>
+							<li>06/2015 : RedHat OpenShift v3</li>
+							<li>08/2015 : Release de Google Container Engine</li>
+							<li>09/2016 : Etude de cas Pokemon GO! sur GCP</li>
+							<li>08/2017 : Github sur Kubernetes (API)</li>
+							<li>05-06/2018
+								<ul>
+									<li>Rancher v2 (Cattle &rarr; Kubernetes)</li>
+									<li>Amazon EKS</li>
+									<li>Microsoft Azure AKS</li>
+								</ul>
+							</li>
+						</ul>
+					</section>
+				</section>
+				
+				<section>
+					<section data-background-image="images/background-architecture.jpg"><h2>Architecture</h2></section>
+					<section>
+						<h2>Anatomie d'un Cluster</h2>
+						<ul>
+							<li class="fragment" ><strong>Master</strong> node
+								<ul>
+									<li>etcd : stockage clé/valeur</li>
+									<li>API server</li>
+									<li>Controller manager : état des objets</li>
+									<li>Scheduler : choix des noeuds pour l'exécution</li>
+								</ul>
+							</li>
+							<li class="fragment" ><strong>Worker</strong> nodes (minions)
+								<ul>
+									<li>kubelet : exécution des pods sur les workers</li>
+									<li>kube-proxy : règles réseau</li>
+									<li>Container runtime : exécution des conteneurs</li>
+								</ul>
+							</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Exécution des conteneurs</h2>
+						<p><strong>CRI</strong> : Container Runtime Interface</p>
+						<ul>
+							<li>Containerd (docker)</li>
+							<li>CRI-O</li>
+							<li>... ?</li>
+						</ul>
+					</section>
+					<section>
+						<img data-src="images/deployment1.png" />
+					</section>
+					<section data-transition="fade">
+						<blockquote>Dév : J'aimerais que mon application soit déployée en 2 instances.</blockquote>
+						<img data-src="images/deployment2.png" />
+					</section>
+					<section data-transition="fade">
+						<p>Le controller manager est alerté, il crée et persiste les définitions de pods pour l'application.</p>
+						<img data-src="images/deployment3.png" />
+					</section>
+					<section data-transition="fade">
+						<p style="font-size: smaller;">Le scheduler voit que des pods sont en attente. Il cherche un worker pour chacun et persiste l'information.</p>
+						<img data-src="images/deployment4.png" />
+					</section>
+					<section data-transition="fade">
+						<p>Chaque kubelet concerné est alerté et exécute son container runtime pour déployer le(s) pod(s).</p>
+						<img data-src="images/deployment5.png" />
+					</section>    
+					<section>
+						<p>Du coup, on se monte un petit cluster ?</p>
+						<img class="fragment" data-src="images/dont-try.jpg" />
+					</section>
+					<section data-transition="fade" >
+						<img data-src="images/chuck.jpg" />
+					</section>
+					<section>
+						<h2>Solutions</h2>
+						<p>Services <strong>managés</strong> cloud :</p>
+						<ul>
+							<li>GKE, AKS, EKS, Digital Ocean, OVH, ...</li>
+							<li>RedHat OpenShift</li>										
+							<li>Rancher</li>
+						</ul>
+					</section>
+				</section>
+				
+				<section>
+					<section><h2>Concepts de base</h2></section>
+					<section data-background-image="images/pod.jpeg" data-background-size="500px">
+						<h2>Pod</h2>
+						<ul>
+							<li>Ressource de base d'un déploiement</li>
+							<li>Abrite 1 ou plusieurs containers</li>
+							<li>Éphémère</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Labels et selectors</h2>
+						<ul>
+							<li>Label : étiquette sur une ressource. Exemples :
+								<ul>
+									<li>app : application name</li>
+									<li>environment : dev/prod/...</li>
+									<li>component : back/front/db...</li>
+								</ul>
+							</li>
+							<li>Label selector : identification d'un ensemble de ressources</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Deployment</h2>
+						<img src="images/deployment.png" style="width: 450px" />				
+					</section>
+					<section>
+						<h2>Service</h2>
+						<ul>
+							<li>Expose l'accès réseau à un groupe de pods (sorte de load balancer)</li>
+							<li>DNS interne
+								<ul><li style="font-style: italic;">[service name].[namespace].svc.cluster.local</li></ul>
+							</li>
+							<li>Peut servir une IP externe</li>
+							<li>Non éphémère</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Service</h2>
+						<img src="images/service_code.png" style="width: 300px;" />
+					</section>
+					<section>
+						<h2>Service</h2>
+						<img src="images/service.png" />
+					</section>
+					<section>
+						<h2>Ingress</h2>
+						<ul>
+							<li>Expose des accès externes vers des services du cluster</li>
+							<li>Définition de règles de routage host/path</li>
+							<li>Nécessite un <em>Ingress controller</em> dans le cluster
+								<ul><li>Traefik</li><li>Nginx</li><li>HAProxy...</li></ul>
+							</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Ingress</h2>
+						<img src="images/ingress.png" />
+					</section>
+				</section>
+
+				<section>
+					<section><h2>Développement</h2></section>
+					<section>
+						<img data-src="images/curve.png" />
+					</section>
+					<section>
+						<h2>Kubectl</h2>
+						<figure>
+							<img data-src="images/kubectl.png">
+							<figcaption style="font-style: italic; font-size: large;">https://learnk8s.io/blog/kubectl-productivity/</figcaption>
+						</figure>
+					</section>
+					<section>
+						<h2>Utilitaires du terminal</h2>
+						<ul>
+							<li>kube-ps1</li>
+							<li>kubectx</li>
+							<li>kubens</li>
+						</ul>
+					</section>
+					<section>
+						<img data-src="images/kubectx.gif" style="width: 900px;"  />
+					</section>
+					<section>
+						<h2>Templating des manifestes</h2>
+						<ul>
+							<li>Helm</li>
+							<li>Kustomize<img src="images/thumbs_up.png" style="width: 45px; border: none; margin: 0; box-shadow: 0 0 0;" /></li>
+						</ul>
+					</section>
+					<section data-background-image="images/kustomize.png" data-background-size="950px"></section>
+					<section>
+						<h2>Log / Debug</h2>
+						<ul>
+							<li>Voir les logs : <em>kubectl logs</em></li>
+							<li>Voir mieux les logs : <strong>Stern</strong><img src="images/thumbs_up.png" style="width: 45px; border: none; margin: 0; box-shadow: 0 0 0;" /></li>
+							<li>Lancer un pod dans le cluster : <ul><li><em>kubectl run -it --rm alpine --image=alpine sh</em></li></ul></li>
+							<li>Accès en local aux services du cluster : <strong>kubefwd</strong></li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Focus sur Kubectl</h2>
+						<h3></h3>
+					</section>
+					<section>
+						<h2>Mode Impératif commande</h2>
+						<pre><code class="hljs">
+$ kubectl run nginx --image nginx
+						</code></pre>
+						<pre><code class="hljs">
+$ kubectl create deployment nginx --image=nginx
+						</code></pre>
+						<br/>
+						<p>kubectl scale|annotate|edit|patch ...</p>
+					</section>
+					<section data-background-image="images/interdit.gif" data-background-size="700px"></section>
+					<section data-background-image="images/interdit.gif" data-background-size="700px" style="background-color: white; opacity: 0.8;">
+						<h2>Limitations</h2>
+						<ul>
+							<li>Options limitées : plusieurs commandes parfois nécessaires</li>
+							<li>Pas de versioning de la configuration</li>
+							<li>Pas de templating des ressources</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Mode Impératif fichier</h2>
+						<pre><code class="hljs">
+$ kubectl create -f config.yaml
+						</code></pre>
+						<pre><code class="hljs">
+$ kubectl replace -f config.yaml
+						</code></pre>
+					</section>
+					<section data-background-image="images/interdit.gif" data-background-size="700px"></section>
+					<section data-background-image="images/interdit.gif" data-background-size="700px" style="background-color: white; opacity: 0.8;">
+						<h2>Limitations</h2>
+						<ul>
+							<li>Ecrase toute modification extérieure</li>
+							<li>On doit connaître l'existence ou non de la ressource (create vs replace)</li>
+							<li>Marche mal sur les répertoires selon la doc</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Mode Déclaratif</h2>
+						<pre><code class="hljs">
+$ kubectl apply -f config.yaml
+						</code></pre>
+						<pre><code class="hljs">
+$ kubectl apply -Rf my_config_folder/
+						</code></pre>
+					</section>
+					<section data-background-image="images/thumbs_up.png" data-background-size="700px"></section>
+					<section data-background-image="images/thumbs_up.png" data-background-size="700px" style="background-color: white; opacity: 0.8;">
+						<h2></h2>
+						<ul>
+							<li>Gère création / mise à jour / suppression</li>
+							<li>Merge les modifications sans les écraser</li>
+							<li>Permet de développer une approche <strong>GitOps</strong></li>
+						</ul>
+						<p class="fragment" style="font-size: larger;">On <strong>décrit</strong> l'état désiré ; Kube fait le reste !</p>
+					</section>
+					<section>
+						<h2>Démo</h2>
+					</section>
+				</section>
+				
+			</div>
+		</div>
+
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,19 @@
+.reveal section img {
+	border-width: 1px;
+}
+.reveal ul, .reveal ul ul {
+  list-style: none; /* Remove default bullets */
+}
+.reveal ul li::before {
+	content: "\25E4";
+	color: #326DE6; /* kube color */
+	display: inline-block; /* Needed to add space between the bullet and the text */
+	width: 1em; /* Also needed for space (tweak if needed) */
+	margin-left: -1em;
+}
+.reveal ul ul li::before {
+	content: "\25E3";
+}
+.reveal ul ul li {
+	font-size: smaller;
+}
